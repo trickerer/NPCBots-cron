@@ -3,7 +3,7 @@ name: Merge changes from TrinityCore into TrinityCore-3.3.5-with-NPCBots
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: '0 21 * * 6'
 jobs:
   tier0:
     name: 3.3.5 branch
