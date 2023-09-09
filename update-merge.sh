@@ -39,7 +39,7 @@ mysql -utrinity -ptrinity world < sql/base/dev/world_database.sql
 cat sql/updates/world/3.3.5/*.sql | mysql -utrinity -ptrinity world
 mysql -uroot < sql/create/drop_mysql_8.sql
 cd bin
-make -j 4 -k && make install
+make -j 4 -k && make install && make clean
 cd check_install/bin
 ./authserver --version
 ./worldserver --version
