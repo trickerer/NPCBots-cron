@@ -31,6 +31,7 @@ cd ..
 c++ --version
 mysql -uroot < data/sql/create/create_mysql.sql
 mysql -uroot < data/sql/create/drop_mysql_8.sql
+mysql -uroot < data/sql/create/create_mysql.sql
 cd bin
 make -j 4 -k && make install && make clean
 cd check_install/etc
