@@ -6,7 +6,7 @@ set -e
 # before install
 git clone --branch=${BRANCH} https://github.com/trickerer/AzerothCore-wotlk-with-NPCBots.git server
 cd server
-git clone --depth 1 --branch master --single-branch https://github.com/ac-data/ac-data.git check_install/bin
+git clone --depth 1 --branch master --single-branch https://github.com/ac-data/ac-data.git bin/check_install/bin
 git config user.email "github.actions@build.bot" && git config user.name "Github Actions"
 git status
 if [ -n "$BASE_BRANCH" ]; then
