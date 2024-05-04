@@ -33,7 +33,12 @@ mysql -uroot < data/sql/create/create_mysql.sql
 mysql -uroot < data/sql/create/drop_mysql_8.sql
 cd bin
 make -j 4 -k && make install && make clean
-cd check_install/bin
+cd check_install/etc
+cp authserver.conf.dist authserver.conf
+cp worldserver.conf.dist worldserver.conf
+cd ../bin
+./authserver --dry-run
+./worldserver --dry-run
 ./authserver --version
 ./worldserver --version
 
