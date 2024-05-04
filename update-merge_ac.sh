@@ -17,7 +17,6 @@ else
 fi
 git fetch BaseRemote ${BASE_BRANCH}
 git merge -m "Merge ${BASE_BRANCH} to ${BRANCH}" BaseRemote/${BASE_BRANCH}
-git submodule update --init --recursive
 git status
 
 # install
