@@ -1,0 +1,52 @@
+name: Merge changes from AzerothCore into AzerothCore-wotlk-with-NPCBots
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 21 * * 5'
+jobs:
+  tier0:
+    name: 3.3.5 branch
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-11 p7zip-full
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 --slave /usr/bin/g++ g++ /usr/bin/g++-11
+        sudo systemctl start mysql.service
+    - name: Run script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        BRANCH: 3.3.5
+      run: |
+        rm -rf .git
+        chmod +x update-merge_ac.sh
+        ./update-merge_ac.sh
+
+  tier1:
+    name: ${{ matrix.BRANCH }} (needs 3.3.5)
+    needs: tier0
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH: [npcbots_3.3.5]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-11 p7zip-full
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 --slave /usr/bin/g++ g++ /usr/bin/g++-11
+        sudo systemctl start mysql.service
+    - name: Run script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        BRANCH: ${{ matrix.BRANCH }}
+        BASE_BRANCH: 3.3.5
+      run: |
+        rm -rf .git
+        chmod +x update-merge_ac.sh
+        ./update-merge_ac.sh
