@@ -41,6 +41,7 @@ cp worldserver.conf.dist worldserver.conf
 cd ../bin
 ./authserver --dry-run
 ./worldserver --dry-run
+git status
 
 # after success
 git push https://${GITHUB_TOKEN}@github.com/trickerer/AzerothCore-wotlk-with-NPCBots.git HEAD:${BRANCH}
