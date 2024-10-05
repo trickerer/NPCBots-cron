@@ -7,7 +7,7 @@ on:
 jobs:
   tier0:
     name: 3.3.5 branch
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v2
