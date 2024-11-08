@@ -38,7 +38,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-12 p7zip-full
+        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-12 p7zip-full libreadline6-dev
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100 --slave /usr/bin/g++ g++ /usr/bin/g++-12
         sudo systemctl start mysql.service
     - name: Run script
