@@ -6,46 +6,108 @@ on:
     - cron: '0 21 * * 5'
 jobs:
   tier0:
-    name: 3.3.5 branch
-    runs-on: ubuntu-22.04
-
+    name: ${{ matrix.branch }} branch
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cc: gcc-13
+            cxx: g++-13
+            pch: 1
+            branch: 3.3.5
+            launcher: 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
+    - name: Strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-start=$EPOCHSECONDS" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=${{ github.workspace }}/bin" >> "$GITHUB_OUTPUT"
+        echo "ccache-key-prefix=ubuntu-${{ matrix.cc }}-${{ github.base_ref || github.ref_name }}" >> "$GITHUB_OUTPUT"
     - name: Dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-11 p7zip-full
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 --slave /usr/bin/g++ g++ /usr/bin/g++-11
-        sudo systemctl start mysql.service
-    - name: Run script
+        sudo apt-get update && sudo apt-get install -yq ccache libboost-dev libboost-filesystem-dev libboost-locale-dev libboost-program-options-dev libboost-regex-dev libboost-thread-dev libssl-dev libreadline-dev zlib1g-dev libbz2-dev p7zip-full
+    - name: Restore ccache
+      id: ccache-restore
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-
+          ${{ steps.strings.outputs.ccache-key-prefix }}-
+    - name: Run Script
       env:
+        CMAKE_BUILD_TYPE: Debug
+        CMAKE_C_COMPILER_LAUNCHER: ${{ matrix.launcher }}
+        CMAKE_CXX_COMPILER_LAUNCHER: ${{ matrix.launcher }}
+        CC: /usr/bin/${{ matrix.cc }}
+        CXX: /usr/bin/${{ matrix.cxx }}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        BRANCH: 3.3.5
+        BRANCH: ${{ matrix.branch }}
+        WORKSPACE: ${{ github.workspace }}
+        OUTPUT_DIR: ${{ github.workspace }}/bin
+        INSTALL_DIR: ${{ github.workspace }}/check_install/bin
+        CCACHE_BASEDIR: ${{ github.workspace }}
+        CCACHE_DIR: ${{ github.workspace }}/.ccache
+        CCACHE_CPP2: 1
+        BUILD_START = ${{ steps.strings.outputs.build-start }}
       run: |
         rm -rf .git
         chmod +x update-merge.sh
         ./update-merge.sh
-
   tier1:
-    name: ${{ matrix.BRANCH }} (needs 3.3.5)
+    name: ${{ matrix.branch }} (needs 3.3.5)
     needs: tier0
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
-        BRANCH: [npcbots_3.3.5]
-
+        include:
+          - cc: gcc-13
+            cxx: g++-13
+            pch: 1
+            branch: npcbots_3.3.5
+            launcher: 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
+    - name: Strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-start=$EPOCHSECONDS" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=${{ github.workspace }}/bin" >> "$GITHUB_OUTPUT"
+        echo "ccache-key-prefix=ubuntu-${{ matrix.cc }}-${{ github.base_ref || github.ref_name }}" >> "$GITHUB_OUTPUT"
     - name: Dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-11 p7zip-full
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 --slave /usr/bin/g++ g++ /usr/bin/g++-11
-        sudo systemctl start mysql.service
-    - name: Run script
+        sudo apt-get update && sudo apt-get install -yq ccache libboost-dev libboost-filesystem-dev libboost-locale-dev libboost-program-options-dev libboost-regex-dev libboost-thread-dev libssl-dev libreadline-dev zlib1g-dev libbz2-dev p7zip-full
+    - name: Restore ccache
+      id: ccache-restore
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-
+          ${{ steps.strings.outputs.ccache-key-prefix }}-
+    - name: Run Script
       env:
+        CMAKE_BUILD_TYPE: Debug
+        CMAKE_C_COMPILER_LAUNCHER: ${{ matrix.launcher }}
+        CMAKE_CXX_COMPILER_LAUNCHER: ${{ matrix.launcher }}
+        CC: /usr/bin/${{ matrix.cc }}
+        CXX: /usr/bin/${{ matrix.cxx }}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        BRANCH: ${{ matrix.BRANCH }}
-        BASE_BRANCH: 3.3.5
+        BRANCH: ${{ matrix.branch }}
+        WORKSPACE: ${{ github.workspace }}
+        OUTPUT_DIR: ${{ github.workspace }}/bin
+        INSTALL_DIR: ${{ github.workspace }}/check_install/bin
+        CCACHE_BASEDIR: ${{ github.workspace }}
+        CCACHE_DIR: ${{ github.workspace }}/.ccache
+        CCACHE_CPP2: 1
+        BUILD_START = ${{ steps.strings.outputs.build-start }}
       run: |
         rm -rf .git
         chmod +x update-merge.sh
