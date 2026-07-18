@@ -48,11 +48,11 @@ jobs:
         CXX: /usr/bin/${{ matrix.cxx }}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         BRANCH: ${{ matrix.branch }}
-        SERVER_DIR: ${{ github.server_dir }}
-        OUTPUT_DIR: ${{ github.server_dir }}/bin
-        INSTALL_DIR: ${{ github.server_dir }}/check_install/bin
-        CCACHE_BASEDIR: ${{ github.server_dir }}
-        CCACHE_DIR: ${{ github.server_dir }}/.ccache
+        SERVER_DIR: ${{ steps.strings.outputs.server-dir }}
+        OUTPUT_DIR: ${{ steps.strings.outputs.server-dir }}/bin
+        INSTALL_DIR: ${{ steps.strings.outputs.server-dir }}/check_install/bin
+        CCACHE_BASEDIR: ${{ steps.strings.outputs.server-dir }}
+        CCACHE_DIR: ${{ steps.strings.outputs.server-dir }}/.ccache
         CCACHE_CPP2: 1
         BUILD_START: ${{ steps.strings.outputs.build-start }}
       run: |
@@ -103,11 +103,11 @@ jobs:
         CXX: /usr/bin/${{ matrix.cxx }}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         BRANCH: ${{ matrix.branch }}
-        SERVER_DIR: ${{ steps.strings.outputs.server_dir }}
-        OUTPUT_DIR: ${{ steps.strings.outputs.server_dir }}/bin
-        INSTALL_DIR: ${{ steps.strings.outputs.server_dir }}/check_install/bin
-        CCACHE_BASEDIR: ${{ steps.strings.outputs.server_dir }}
-        CCACHE_DIR: ${{ steps.strings.outputs.server_dir }}/.ccache
+        SERVER_DIR: ${{ steps.strings.outputs.server-dir }}
+        OUTPUT_DIR: ${{ steps.strings.outputs.server-dir }}/bin
+        INSTALL_DIR: ${{ steps.strings.outputs.server-dir }}/check_install/bin
+        CCACHE_BASEDIR: ${{ steps.strings.outputs.server-dir }}
+        CCACHE_DIR: ${{ steps.strings.outputs.server-dir }}/.ccache
         CCACHE_CPP2: 1
         BUILD_START: ${{ steps.strings.outputs.build-start }}
       run: |
