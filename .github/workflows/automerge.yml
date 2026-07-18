@@ -24,7 +24,8 @@ jobs:
       shell: bash
       run: |
         echo "build-start=$EPOCHSECONDS" >> "$GITHUB_OUTPUT"
-        echo "build-output-dir=${{ github.workspace }}/bin" >> "$GITHUB_OUTPUT"
+        echo "server_dir=${{ github.workspace }}/server" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=${{ github.workspace }}/server/bin" >> "$GITHUB_OUTPUT"
         echo "ccache-key-prefix=ubuntu-${{ matrix.cc }}-${{ github.base_ref || github.ref_name }}" >> "$GITHUB_OUTPUT"
     - name: Dependencies
       run: |
@@ -33,7 +34,7 @@ jobs:
       id: ccache-restore
       uses: actions/cache@v4
       with:
-        path: ${{ github.workspace }}/.ccache
+        path: ${{ github.server_dir }}/.ccache
         key: ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
           ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-
@@ -47,11 +48,11 @@ jobs:
         CXX: /usr/bin/${{ matrix.cxx }}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         BRANCH: ${{ matrix.branch }}
-        WORKSPACE: ${{ github.workspace }}
-        OUTPUT_DIR: ${{ github.workspace }}/bin
-        INSTALL_DIR: ${{ github.workspace }}/check_install/bin
-        CCACHE_BASEDIR: ${{ github.workspace }}
-        CCACHE_DIR: ${{ github.workspace }}/.ccache
+        SERVER_DIR: ${{ github.server_dir }}
+        OUTPUT_DIR: ${{ github.server_dir }}/bin
+        INSTALL_DIR: ${{ github.server_dir }}/check_install/bin
+        CCACHE_BASEDIR: ${{ github.server_dir }}
+        CCACHE_DIR: ${{ github.server_dir }}/.ccache
         CCACHE_CPP2: 1
         BUILD_START: ${{ steps.strings.outputs.build-start }}
       run: |
@@ -78,7 +79,8 @@ jobs:
       shell: bash
       run: |
         echo "build-start=$EPOCHSECONDS" >> "$GITHUB_OUTPUT"
-        echo "build-output-dir=${{ github.workspace }}/bin" >> "$GITHUB_OUTPUT"
+        echo "server_dir=${{ github.workspace }}/server" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=${{ github.workspace }}/server/bin" >> "$GITHUB_OUTPUT"
         echo "ccache-key-prefix=ubuntu-${{ matrix.cc }}-${{ github.base_ref || github.ref_name }}" >> "$GITHUB_OUTPUT"
     - name: Dependencies
       run: |
@@ -87,7 +89,7 @@ jobs:
       id: ccache-restore
       uses: actions/cache@v4
       with:
-        path: ${{ github.workspace }}/.ccache
+        path: ${{ github.server_dir }}/.ccache
         key: ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
           ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-
@@ -101,11 +103,11 @@ jobs:
         CXX: /usr/bin/${{ matrix.cxx }}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         BRANCH: ${{ matrix.branch }}
-        WORKSPACE: ${{ github.workspace }}
-        OUTPUT_DIR: ${{ github.workspace }}/bin
-        INSTALL_DIR: ${{ github.workspace }}/check_install/bin
-        CCACHE_BASEDIR: ${{ github.workspace }}
-        CCACHE_DIR: ${{ github.workspace }}/.ccache
+        SERVER_DIR: ${{ github.server_dir }}
+        OUTPUT_DIR: ${{ github.server_dir }}/bin
+        INSTALL_DIR: ${{ github.server_dir }}/check_install/bin
+        CCACHE_BASEDIR: ${{ github.server_dir }}
+        CCACHE_DIR: ${{ github.server_dir }}/.ccache
         CCACHE_CPP2: 1
         BUILD_START: ${{ steps.strings.outputs.build-start }}
       run: |

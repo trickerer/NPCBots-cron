@@ -4,8 +4,8 @@
 set -e
 
 # before install
-git clone --branch=${BRANCH} https://github.com/trickerer/TrinityCore-3.3.5-with-NPCBots.git server
-cd server
+git clone --branch=${BRANCH} https://github.com/trickerer/TrinityCore-3.3.5-with-NPCBots.git $SERVER_DIR
+cd $SERVER_DIR
 git config user.email "github.actions@build.bot" && git config user.name "Github Actions"
 git status
 if [ -n "$BASE_BRANCH" ]; then
@@ -20,7 +20,7 @@ git submodule update --init --recursive
 git status
 
 # install
-cmake -GNinja -S $WORKSPACE -B $OUTPUT_DIR -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=1 -DUSE_SCRIPTPCH=1 -DTOOLS=0 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=0 -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG -g0" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG -g0" -DCMAKE_INSTALL_PREFIX=check_install -DBUILD_TESTING=0
+cmake -GNinja -S $SERVER_DIR -B $OUTPUT_DIR -DWITH_WARNINGS=0 -DWITH_COREDEBUG=0 -DUSE_COREPCH=1 -DUSE_SCRIPTPCH=1 -DTOOLS=0 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=0 -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG -g0" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG -g0" -DCMAKE_INSTALL_PREFIX=check_install -DBUILD_TESTING=0
 
 # script
 ccache -z
