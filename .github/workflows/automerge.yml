@@ -34,7 +34,7 @@ jobs:
       id: ccache-restore
       uses: actions/cache@v4
       with:
-        path: ${{ github.server_dir }}/.ccache
+        path: ${{ steps.strings.outputs.server-dir }}/.ccache
         key: ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
           ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-
@@ -48,13 +48,13 @@ jobs:
         CXX: /usr/bin/${{ matrix.cxx }}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         BRANCH: ${{ matrix.branch }}
-        SERVER_DIR: ${{ steps.strings.outputs.server-dir }}
-        OUTPUT_DIR: ${{ steps.strings.outputs.server-dir }}/bin
-        INSTALL_DIR: ${{ steps.strings.outputs.server-dir }}/check_install/bin
-        CCACHE_BASEDIR: ${{ steps.strings.outputs.server-dir }}
-        CCACHE_DIR: ${{ steps.strings.outputs.server-dir }}/.ccache
+        SERVER_DIR: ${{ github.workspace }}/server
+        OUTPUT_DIR: ${{ github.workspace }}/server/bin
+        INSTALL_DIR: ${{ github.workspace }}/server/check_install/bin
+        CCACHE_BASEDIR: ${{ github.workspace }}/server
+        CCACHE_DIR: ${{ github.workspace }}/server/.ccache
         CCACHE_CPP2: 1
-        BUILD_START: ${{ steps.strings.outputs.build-start }}
+        BUILD_START: $EPOCHSECONDS
       run: |
         rm -rf .git
         chmod +x update-merge.sh
@@ -89,7 +89,7 @@ jobs:
       id: ccache-restore
       uses: actions/cache@v4
       with:
-        path: ${{ github.server_dir }}/.ccache
+        path: ${{ steps.strings.outputs.server-dir }}/.ccache
         key: ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
           ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-
@@ -103,13 +103,13 @@ jobs:
         CXX: /usr/bin/${{ matrix.cxx }}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         BRANCH: ${{ matrix.branch }}
-        SERVER_DIR: ${{ steps.strings.outputs.server-dir }}
-        OUTPUT_DIR: ${{ steps.strings.outputs.server-dir }}/bin
-        INSTALL_DIR: ${{ steps.strings.outputs.server-dir }}/check_install/bin
-        CCACHE_BASEDIR: ${{ steps.strings.outputs.server-dir }}
-        CCACHE_DIR: ${{ steps.strings.outputs.server-dir }}/.ccache
+        SERVER_DIR: ${{ github.workspace }}/server
+        OUTPUT_DIR: ${{ github.workspace }}/server/bin
+        INSTALL_DIR: ${{ github.workspace }}/server/check_install/bin
+        CCACHE_BASEDIR: ${{ github.workspace }}/server
+        CCACHE_DIR: ${{ github.workspace }}/server/.ccache
         CCACHE_CPP2: 1
-        BUILD_START: ${{ steps.strings.outputs.build-start }}
+        BUILD_START: $EPOCHSECONDS
       run: |
         rm -rf .git
         chmod +x update-merge.sh
