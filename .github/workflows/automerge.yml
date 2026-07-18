@@ -53,7 +53,7 @@ jobs:
         CCACHE_BASEDIR: ${{ github.workspace }}
         CCACHE_DIR: ${{ github.workspace }}/.ccache
         CCACHE_CPP2: 1
-        BUILD_START = ${{ steps.strings.outputs.build-start }}
+        BUILD_START: ${{ steps.strings.outputs.build-start }}
       run: |
         rm -rf .git
         chmod +x update-merge.sh
@@ -107,7 +107,7 @@ jobs:
         CCACHE_BASEDIR: ${{ github.workspace }}
         CCACHE_DIR: ${{ github.workspace }}/.ccache
         CCACHE_CPP2: 1
-        BUILD_START = ${{ steps.strings.outputs.build-start }}
+        BUILD_START: ${{ steps.strings.outputs.build-start }}
       run: |
         rm -rf .git
         chmod +x update-merge.sh
