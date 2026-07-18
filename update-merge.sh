@@ -4,7 +4,7 @@
 set -e
 
 # before install
-git clone --branch=${BRANCH} https://github.com/trickerer/TrinityCore-3.3.5-with-NPCBots.git $SERVER_DIR
+git clone --branch=${BRANCH} https://github.com/trickerer/TrinityCore-3.3.5-with-NPCBots.git server
 cd $SERVER_DIR
 git config user.email "github.actions@build.bot" && git config user.name "Github Actions"
 git status
