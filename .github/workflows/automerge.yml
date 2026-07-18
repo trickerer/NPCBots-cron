@@ -24,7 +24,7 @@ jobs:
       shell: bash
       run: |
         echo "build-start=$EPOCHSECONDS" >> "$GITHUB_OUTPUT"
-        echo "server_dir=${{ github.workspace }}/server" >> "$GITHUB_OUTPUT"
+        echo "server-dir=${{ github.workspace }}/server" >> "$GITHUB_OUTPUT"
         echo "build-output-dir=${{ github.workspace }}/server/bin" >> "$GITHUB_OUTPUT"
         echo "ccache-key-prefix=ubuntu-${{ matrix.cc }}-${{ github.base_ref || github.ref_name }}" >> "$GITHUB_OUTPUT"
     - name: Dependencies
@@ -34,7 +34,7 @@ jobs:
       id: ccache-restore
       uses: actions/cache@v4
       with:
-        path: ${{ steps.strings.outputs.server-dir }}/.ccache
+        path: ${{ github.workspace }}/.ccache
         key: ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
           ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-
@@ -51,14 +51,22 @@ jobs:
         SERVER_DIR: ${{ github.workspace }}/server
         OUTPUT_DIR: ${{ github.workspace }}/server/bin
         INSTALL_DIR: ${{ github.workspace }}/server/check_install/bin
-        CCACHE_BASEDIR: ${{ github.workspace }}/server
-        CCACHE_DIR: ${{ github.workspace }}/server/.ccache
+        CCACHE_BASEDIR: ${{ github.workspace }}
+        CCACHE_DIR: ${{ github.workspace }}/.ccache
         CCACHE_CPP2: 1
-        BUILD_START: $EPOCHSECONDS
       run: |
+        ccache -z
         rm -rf .git
         chmod +x update-merge.sh
         ./update-merge.sh
+    - name: Evict ccache
+      env:
+        CCACHE_BASEDIR: ${{ github.workspace }}
+        CCACHE_DIR: ${{ github.workspace }}/.ccache
+        CCACHE_CPP2: 1
+      run: |
+        ccache -s
+        ccache --evict-older-than $(($EPOCHSECONDS - ${{ steps.strings.outputs.build-start }}))s
   tier1:
     name: ${{ matrix.branch }} (needs 3.3.5)
     needs: tier0
@@ -79,7 +87,7 @@ jobs:
       shell: bash
       run: |
         echo "build-start=$EPOCHSECONDS" >> "$GITHUB_OUTPUT"
-        echo "server_dir=${{ github.workspace }}/server" >> "$GITHUB_OUTPUT"
+        echo "server-dir=${{ github.workspace }}/server" >> "$GITHUB_OUTPUT"
         echo "build-output-dir=${{ github.workspace }}/server/bin" >> "$GITHUB_OUTPUT"
         echo "ccache-key-prefix=ubuntu-${{ matrix.cc }}-${{ github.base_ref || github.ref_name }}" >> "$GITHUB_OUTPUT"
     - name: Dependencies
@@ -89,7 +97,7 @@ jobs:
       id: ccache-restore
       uses: actions/cache@v4
       with:
-        path: ${{ steps.strings.outputs.server-dir }}/.ccache
+        path: ${{ github.workspace }}/.ccache
         key: ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
           ${{ steps.strings.outputs.ccache-key-prefix }}-${{ github.ref_name }}-
@@ -106,11 +114,19 @@ jobs:
         SERVER_DIR: ${{ github.workspace }}/server
         OUTPUT_DIR: ${{ github.workspace }}/server/bin
         INSTALL_DIR: ${{ github.workspace }}/server/check_install/bin
-        CCACHE_BASEDIR: ${{ github.workspace }}/server
-        CCACHE_DIR: ${{ github.workspace }}/server/.ccache
+        CCACHE_BASEDIR: ${{ github.workspace }}
+        CCACHE_DIR: ${{ github.workspace }}/.ccache
         CCACHE_CPP2: 1
-        BUILD_START: $EPOCHSECONDS
       run: |
+        ccache -z
         rm -rf .git
         chmod +x update-merge.sh
         ./update-merge.sh
+    - name: Evict ccache
+      env:
+        CCACHE_BASEDIR: ${{ github.workspace }}
+        CCACHE_DIR: ${{ github.workspace }}/.ccache
+        CCACHE_CPP2: 1
+      run: |
+        ccache -s
+        ccache --evict-older-than $(($EPOCHSECONDS - ${{ steps.strings.outputs.build-start }}))s
